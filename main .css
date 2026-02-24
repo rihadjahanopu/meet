@@ -9,7 +9,7 @@ body {
 	border-radius: 8px;
 	padding: 16px;
 	max-width: 250px;
-	box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .product-image {
@@ -47,4 +47,12 @@ body {
 
 .product-button:hover {
 	background-color: #21867a;
+}
+
+.min {
+	min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
 }
