@@ -2,40 +2,1229 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
-		<link rel="stylesheet" href="./main .css" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0" />
+		<title>Higher-Order Functions in JavaScript - Real World Examples</title>
+		<style>
+			@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap");
+
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			body {
+				font-family: "Inter", sans-serif;
+				background: linear-gradient(
+					135deg,
+					#1e1b4b 0%,
+					#312e81 50%,
+					#4338ca 100%
+				);
+				min-height: 100vh;
+				color: #e0e7ff;
+				overflow-x: hidden;
+			}
+
+			.container {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 2rem;
+			}
+
+			header {
+				text-align: center;
+				padding: 3rem 0;
+				position: relative;
+			}
+
+			h1 {
+				font-size: 3.5rem;
+				font-weight: 800;
+				background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				margin-bottom: 1rem;
+				animation: glow 3s ease-in-out infinite alternate;
+			}
+
+			@keyframes glow {
+				from {
+					filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.3));
+				}
+				to {
+					filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.5));
+				}
+			}
+
+			.subtitle {
+				font-size: 1.25rem;
+				color: #a5b4fc;
+				max-width: 600px;
+				margin: 0 auto;
+				line-height: 1.6;
+			}
+
+			.concept-card {
+				background: rgba(255, 255, 255, 0.05);
+				backdrop-filter: blur(10px);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				border-radius: 20px;
+				padding: 2.5rem;
+				margin: 2rem 0;
+				position: relative;
+				overflow: hidden;
+				transition:
+					transform 0.3s ease,
+					box-shadow 0.3s ease;
+			}
+
+			.concept-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+			}
+
+			.concept-card::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 4px;
+				background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+			}
+
+			.card-header {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+				margin-bottom: 1.5rem;
+			}
+
+			.icon {
+				width: 50px;
+				height: 50px;
+				background: linear-gradient(135deg, #4f46e5, #7c3aed);
+				border-radius: 12px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 1.5rem;
+			}
+
+			h2 {
+				font-size: 1.75rem;
+				color: #fff;
+			}
+
+			.description {
+				color: #c7d2fe;
+				line-height: 1.7;
+				margin-bottom: 1.5rem;
+				font-size: 1.05rem;
+			}
+
+			.code-block {
+				background: #0f172a;
+				border-radius: 12px;
+				padding: 1.5rem;
+				font-family: "Fira Code", monospace;
+				font-size: 0.9rem;
+				overflow-x: auto;
+				border: 1px solid #334155;
+				position: relative;
+			}
+
+			.code-header {
+				display: flex;
+				gap: 0.5rem;
+				margin-bottom: 1rem;
+				padding-bottom: 0.5rem;
+				border-bottom: 1px solid #334155;
+			}
+
+			.dot {
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+			}
+
+			.dot-red {
+				background: #ef4444;
+			}
+			.dot-yellow {
+				background: #f59e0b;
+			}
+			.dot-green {
+				background: #10b981;
+			}
+
+			.code-content {
+				color: #e2e8f0;
+				line-height: 1.8;
+			}
+
+			.keyword {
+				color: #c084fc;
+			}
+			.function {
+				color: #60a5fa;
+			}
+			.string {
+				color: #86efac;
+			}
+			.comment {
+				color: #64748b;
+				font-style: italic;
+			}
+			.number {
+				color: #f472b6;
+			}
+			.operator {
+				color: #fbbf24;
+			}
+
+			.demo-section {
+				margin-top: 2rem;
+				padding-top: 2rem;
+				border-top: 1px solid rgba(255, 255, 255, 0.1);
+			}
+
+			.demo-title {
+				font-size: 1.25rem;
+				color: #fbbf24;
+				margin-bottom: 1rem;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+
+			.interactive-demo {
+				background: rgba(15, 23, 42, 0.6);
+				border-radius: 12px;
+				padding: 1.5rem;
+				margin-top: 1rem;
+			}
+
+			.input-group {
+				display: flex;
+				gap: 1rem;
+				margin-bottom: 1rem;
+				flex-wrap: wrap;
+			}
+
+			input,
+			select,
+			button {
+				padding: 0.75rem 1rem;
+				border-radius: 8px;
+				border: 1px solid #475569;
+				background: #1e293b;
+				color: #fff;
+				font-family: inherit;
+				font-size: 0.95rem;
+				transition: all 0.3s ease;
+			}
+
+			input:focus,
+			select:focus {
+				outline: none;
+				border-color: #60a5fa;
+				box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+			}
+
+			button {
+				background: linear-gradient(135deg, #4f46e5, #7c3aed);
+				border: none;
+				cursor: pointer;
+				font-weight: 600;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+
+			button:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+			}
+
+			.output {
+				background: #0f172a;
+				border-radius: 8px;
+				padding: 1rem;
+				font-family: "Fira Code", monospace;
+				min-height: 100px;
+				border-left: 4px solid #10b981;
+				margin-top: 1rem;
+				white-space: pre-wrap;
+				color: #86efac;
+			}
+
+			.output.error {
+				border-left-color: #ef4444;
+				color: #fca5a5;
+			}
+
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+				gap: 2rem;
+				margin-top: 3rem;
+			}
+
+			.mini-card {
+				background: rgba(255, 255, 255, 0.03);
+				border: 1px solid rgba(255, 255, 255, 0.05);
+				border-radius: 16px;
+				padding: 1.5rem;
+				transition: all 0.3s ease;
+			}
+
+			.mini-card:hover {
+				background: rgba(255, 255, 255, 0.08);
+				transform: scale(1.02);
+			}
+
+			.tag {
+				display: inline-block;
+				padding: 0.25rem 0.75rem;
+				background: rgba(96, 165, 250, 0.2);
+				color: #60a5fa;
+				border-radius: 20px;
+				font-size: 0.75rem;
+				font-weight: 600;
+				margin-bottom: 0.5rem;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+			}
+
+			.progress-bar {
+				position: fixed;
+				top: 0;
+				left: 0;
+				height: 4px;
+				background: linear-gradient(90deg, #60a5fa, #a78bfa);
+				z-index: 1000;
+				transition: width 0.3s ease;
+			}
+
+			.floating-shapes {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				pointer-events: none;
+				z-index: -1;
+				overflow: hidden;
+			}
+
+			.shape {
+				position: absolute;
+				opacity: 0.1;
+				animation: float 20s infinite ease-in-out;
+			}
+
+			@keyframes float {
+				0%,
+				100% {
+					transform: translateY(0) rotate(0deg);
+				}
+				50% {
+					transform: translateY(-100px) rotate(180deg);
+				}
+			}
+
+			.summary-box {
+				background: linear-gradient(
+					135deg,
+					rgba(79, 70, 229, 0.2),
+					rgba(124, 58, 237, 0.2)
+				);
+				border: 1px solid rgba(139, 92, 246, 0.3);
+				border-radius: 16px;
+				padding: 2rem;
+				margin-top: 3rem;
+				text-align: center;
+			}
+
+			.summary-box h3 {
+				color: #fbbf24;
+				margin-bottom: 1rem;
+				font-size: 1.5rem;
+			}
+
+			.checklist {
+				text-align: left;
+				display: inline-block;
+				margin-top: 1rem;
+			}
+
+			.checklist li {
+				margin: 0.5rem 0;
+				list-style: none;
+				display: flex;
+				align-items: center;
+				gap: 0.5rem;
+			}
+
+			.checklist li::before {
+				content: "✓";
+				color: #10b981;
+				font-weight: bold;
+			}
+		</style>
 	</head>
-	<body class="min">
-		<div class="product-card">
-			<img
-				src="https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png"
-				alt="Product Image"
-				class="product-image"
-			/>
-			<h3 class="product-title">Product Name</h3>
-			<p class="product-description">
-				This is a great product description.
-			</p>
-			<p class="product-price">$99.99</p>
-			<button class="product-button">Add to Cart</button>
+	<body>
+		<div
+			class="progress-bar"
+			id="progressBar"></div>
+
+		<div class="floating-shapes">
+			<div
+				class="shape"
+				style="
+					top: 10%;
+					left: 10%;
+					width: 100px;
+					height: 100px;
+					background: #60a5fa;
+					border-radius: 50%;
+				"></div>
+			<div
+				class="shape"
+				style="
+					top: 70%;
+					left: 80%;
+					width: 150px;
+					height: 150px;
+					background: #a78bfa;
+					clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+				"></div>
+			<div
+				class="shape"
+				style="
+					top: 40%;
+					left: 90%;
+					width: 80px;
+					height: 80px;
+					background: #f472b6;
+					border-radius: 12px;
+				"></div>
 		</div>
 
-		<div class="product-card">
-			<img
-				src="https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png"
-				alt="Product Image"
-				class="product-image"
-			/>
-			<h3 class="product-title">Product Name</h3>
-			<p class="product-description">
-				This is a great product description.
-			</p>
-			<p class="product-price">$99.99</p>
-			<button class="product-button">Add to Cart</button>
+		<div class="container">
+			<header>
+				<h1>Higher-Order Functions</h1>
+				<p class="subtitle">
+					Master JavaScript's most powerful functional programming concept
+					through real-world examples. Learn how functions that operate on other
+					functions can transform your code.
+				</p>
+			</header>
+
+			<!-- Example 1: Array Methods -->
+			<div class="concept-card">
+				<div class="card-header">
+					<div class="icon">🔄</div>
+					<h2>1. Array Methods (map, filter, reduce)</h2>
+				</div>
+				<p class="description">
+					The most common higher-order functions in JavaScript. They accept
+					callback functions to transform, filter, or aggregate array data.
+					Essential for data processing in real applications.
+				</p>
+
+				<div class="code-block">
+					<div class="code-header">
+						<div class="dot dot-red"></div>
+						<div class="dot dot-yellow"></div>
+						<div class="dot dot-green"></div>
+					</div>
+					<div class="code-content">
+						<span class="comment"
+							>// Real-world: E-commerce cart processing</span
+						>
+						<span class="keyword">const</span> cart = [ { name:
+						<span class="string">'Laptop'</span>, price:
+						<span class="number">999</span>, category:
+						<span class="string">'Electronics'</span> }, { name:
+						<span class="string">'Book'</span>, price:
+						<span class="number">15</span>, category:
+						<span class="string">'Education'</span> }, { name:
+						<span class="string">'Headphones'</span>, price:
+						<span class="number">199</span>, category:
+						<span class="string">'Electronics'</span> } ];
+
+						<span class="comment"
+							>// map: Transform data (get prices with tax)</span
+						>
+						<span class="keyword">const</span> pricesWithTax = cart.<span
+							class="function"
+							>map</span
+						>(item <span class="operator">=></span> ({ ...item, priceWithTax:
+						item.price <span class="operator">*</span>
+						<span class="number">1.1</span>
+						}));
+
+						<span class="comment">// filter: Select specific items</span>
+						<span class="keyword">const</span> electronics = cart.<span
+							class="function"
+							>filter</span
+						>(item <span class="operator">=></span> item.category
+						<span class="operator">===</span>
+						<span class="string">'Electronics'</span>
+						);
+
+						<span class="comment">// reduce: Aggregate values</span>
+						<span class="keyword">const</span> total = cart.<span
+							class="function"
+							>reduce</span
+						>((sum, item) <span class="operator">=></span> sum
+						<span class="operator">+</span> item.price,
+						<span class="number">0</span>
+						);
+					</div>
+				</div>
+
+				<div class="demo-section">
+					<div class="demo-title">🛒 Interactive Cart Calculator</div>
+					<div class="interactive-demo">
+						<div class="input-group">
+							<select id="itemSelect">
+								<option value="laptop">Laptop ($999)</option>
+								<option value="phone">Phone ($699)</option>
+								<option value="book">Book ($15)</option>
+								<option value="headphones">Headphones ($199)</option>
+							</select>
+							<button onclick="addToCart()">Add to Cart</button>
+							<button
+								onclick="clearCart()"
+								style="background: #475569">
+								Clear
+							</button>
+						</div>
+						<div
+							id="cartOutput"
+							class="output">
+							Cart is empty. Add items to see higher-order functions in
+							action...
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Example 2: Function Composition -->
+			<div class="concept-card">
+				<div class="card-header">
+					<div class="icon">🔗</div>
+					<h2>2. Function Composition & Pipelines</h2>
+				</div>
+				<p class="description">
+					Build complex operations by combining simple functions. Like Unix
+					pipes, but for JavaScript. Perfect for data validation, transformation
+					pipelines, and middleware chains.
+				</p>
+
+				<div class="code-block">
+					<div class="code-header">
+						<div class="dot dot-red"></div>
+						<div class="dot dot-yellow"></div>
+						<div class="dot dot-green"></div>
+					</div>
+					<div class="code-content">
+						<span class="comment">// Real-world: Data validation pipeline</span>
+						<span class="keyword">const</span>
+						<span class="function">pipe</span> = (...fns)
+						<span class="operator">=></span> (x)
+						<span class="operator">=></span> fns.<span class="function"
+							>reduce</span
+						>((v, f) <span class="operator">=></span> f(v), x);
+
+						<span class="keyword">const</span>
+						<span class="function">trim</span> = (str)
+						<span class="operator">=></span> str.<span class="function"
+							>trim</span
+						>(); <span class="keyword">const</span>
+						<span class="function">toLower</span> = (str)
+						<span class="operator">=></span> str.<span class="function"
+							>toLowerCase</span
+						>(); <span class="keyword">const</span>
+						<span class="function">removeSpecialChars</span> = (str)
+						<span class="operator">=></span> str.<span class="function"
+							>replace</span
+						>(<span class="string">/[^a-z0-9]/g</span>,
+						<span class="string">''</span>); <span class="keyword">const</span>
+						<span class="function">addPrefix</span> = (prefix)
+						<span class="operator">=></span> (str)
+						<span class="operator">=></span>
+						<span class="string">`</span>${prefix}<span class="string">_</span
+						>${str}<span class="string">`</span>;
+
+						<span class="keyword">const</span>
+						<span class="function">sanitizeUsername</span> =
+						<span class="function">pipe</span>( trim, toLower,
+						removeSpecialChars, <span class="function">addPrefix</span>(<span
+							class="string"
+							>'user'</span
+						>) );
+
+						<span class="comment"
+							>// Usage: " John_Doe@123 " → "user_johndoe123"</span
+						>
+					</div>
+				</div>
+
+				<div class="demo-section">
+					<div class="demo-title">📝 Username Sanitizer</div>
+					<div class="interactive-demo">
+						<div class="input-group">
+							<input
+								type="text"
+								id="usernameInput"
+								placeholder="Enter messy username (e.g., '  John_Doe@123  ')"
+								style="flex: 1" />
+							<button onclick="sanitize()">Sanitize</button>
+						</div>
+						<div
+							id="pipelineOutput"
+							class="output">
+							Enter a username to see the pipeline transform it step by step...
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Example 3: Closures & Factory Functions -->
+			<div class="concept-card">
+				<div class="card-header">
+					<div class="icon">🏭</div>
+					<h2>3. Function Factories & Closures</h2>
+				</div>
+				<p class="description">
+					Create specialized functions on the fly. Used for API clients with
+					authentication, configured validators, event handlers with specific
+					contexts, and maintaining private state.
+				</p>
+
+				<div class="code-block">
+					<div class="code-header">
+						<div class="dot dot-red"></div>
+						<div class="dot dot-yellow"></div>
+						<div class="dot dot-green"></div>
+					</div>
+					<div class="code-content">
+						<span class="comment"
+							>// Real-world: API client factory with auth</span
+						>
+						<span class="keyword">const</span>
+						<span class="function">createAPIClient</span> = (baseURL, apiKey)
+						<span class="operator">=></span> {
+						<span class="comment">// Private state via closure</span>
+						<span class="keyword">let</span> requestCount =
+						<span class="number">0</span>;
+
+						<span class="keyword">return</span> {
+						<span class="function">get</span>: async (endpoint)
+						<span class="operator">=></span> { requestCount<span
+							class="operator"
+							>++</span
+						>; console.<span class="function">log</span>(<span class="string"
+							>`Request #</span
+						>${requestCount}<span class="string"> to </span
+						>${baseURL}${endpoint}<span class="string">`</span>);
+
+						<span class="keyword">return</span>
+						<span class="function">fetch</span>(<span class="string">`</span
+						>${baseURL}${endpoint}<span class="string">`</span>, { headers: {
+						<span class="string">'Authorization'</span>:
+						<span class="string">`Bearer </span>${apiKey}<span class="string"
+							>`</span
+						>
+						} }); }, <span class="function">getRequestCount</span>: ()
+						<span class="operator">=></span> requestCount }; };
+
+						<span class="comment">// Create specialized clients</span>
+						<span class="keyword">const</span> githubAPI =
+						<span class="function">createAPIClient</span>(
+						<span class="string">'https://api.github.com'</span>,
+						<span class="string">'ghp_xxxxxxxx'</span>
+						);
+						<span class="keyword">const</span> stripeAPI =
+						<span class="function">createAPIClient</span>(
+						<span class="string">'https://api.stripe.com/v1'</span>,
+						<span class="string">'sk_test_xxxxxxxx'</span>
+						);
+					</div>
+				</div>
+
+				<div class="demo-section">
+					<div class="demo-title">🔧 Discount Calculator Factory</div>
+					<div class="interactive-demo">
+						<div class="input-group">
+							<input
+								type="number"
+								id="discountRate"
+								placeholder="Discount % (e.g., 20)"
+								style="width: 150px" />
+							<button onclick="createDiscountCalculator()">
+								Create Calculator
+							</button>
+						</div>
+						<div
+							class="input-group"
+							id="calcControls"
+							style="display: none">
+							<input
+								type="number"
+								id="originalPrice"
+								placeholder="Original price" />
+							<button onclick="calculateDiscount()">Calculate</button>
+						</div>
+						<div
+							id="factoryOutput"
+							class="output">
+							Create a discount calculator to see closures in action...
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Example 4: Debounce/Throttle -->
+			<div class="concept-card">
+				<div class="card-header">
+					<div class="icon">⏱️</div>
+					<h2>4. Debounce & Throttle (Performance)</h2>
+				</div>
+				<p class="description">
+					Control function execution rate. Critical for performance optimization
+					in search inputs, scroll handlers, resize events, and API call rate
+					limiting.
+				</p>
+
+				<div class="code-block">
+					<div class="code-header">
+						<div class="dot dot-red"></div>
+						<div class="dot dot-yellow"></div>
+						<div class="dot dot-green"></div>
+					</div>
+					<div class="code-content">
+						<span class="comment"
+							>// Real-world: Search input optimization</span
+						>
+						<span class="keyword">const</span>
+						<span class="function">debounce</span> = (fn, delay)
+						<span class="operator">=></span> {
+						<span class="keyword">let</span> timeoutId;
+
+						<span class="keyword">return</span> (...args)
+						<span class="operator">=></span> {
+						<span class="function">clearTimeout</span>(timeoutId); timeoutId =
+						<span class="function">setTimeout</span>(()
+						<span class="operator">=></span>
+						<span class="function">fn</span>(...args), delay); }; };
+
+						<span class="comment"
+							>// Usage: Wait 300ms after user stops typing</span
+						>
+						<span class="keyword">const</span> searchInput = document.<span
+							class="function"
+							>getElementById</span
+						>(<span class="string">'search'</span>);
+						<span class="keyword">const</span> handleSearch =
+						<span class="function">debounce</span>((query)
+						<span class="operator">=></span> { console.<span class="function"
+							>log</span
+						>(<span class="string">'Searching for:'</span>, query);
+						<span class="comment">// API call here</span>
+						}, <span class="number">300</span>); searchInput.<span
+							class="function"
+							>addEventListener</span
+						>(<span class="string">'input'</span>, (e)
+						<span class="operator">=></span>
+						<span class="function">handleSearch</span>(e.target.value) );
+					</div>
+				</div>
+
+				<div class="demo-section">
+					<div class="demo-title">⌨️ Type to Search (Debounced vs Normal)</div>
+					<div class="interactive-demo">
+						<div class="input-group">
+							<input
+								type="text"
+								id="searchInput"
+								placeholder="Type fast here..."
+								style="flex: 1" />
+						</div>
+						<div
+							style="
+								display: grid;
+								grid-template-columns: 1fr 1fr;
+								gap: 1rem;
+								margin-top: 1rem;
+							">
+							<div>
+								<strong style="color: #ef4444"
+									>Normal (every keystroke):</strong
+								>
+								<div
+									id="normalOutput"
+									class="output"
+									style="min-height: 60px; font-size: 0.85rem">
+									0 calls
+								</div>
+							</div>
+							<div>
+								<strong style="color: #10b981">Debounced (300ms delay):</strong>
+								<div
+									id="debounceOutput"
+									class="output"
+									style="min-height: 60px; font-size: 0.85rem">
+									0 calls
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Example 5: Middleware Pattern -->
+			<div class="concept-card">
+				<div class="card-header">
+					<div class="icon">🥞</div>
+					<h2>5. Middleware Pattern (Express.js Style)</h2>
+				</div>
+				<p class="description">
+					Chain functions that process data sequentially. Each middleware can
+					modify the context or stop the chain. Powers Express.js, Redux, and
+					modern web frameworks.
+				</p>
+
+				<div class="code-block">
+					<div class="code-header">
+						<div class="dot dot-red"></div>
+						<div class="dot dot-yellow"></div>
+						<div class="dot dot-green"></div>
+					</div>
+					<div class="code-content">
+						<span class="comment">// Real-world: HTTP request pipeline</span>
+						<span class="keyword">const</span>
+						<span class="function">createMiddlewarePipeline</span> =
+						(...middlewares) <span class="operator">=></span> {
+						<span class="keyword">return</span> (ctx)
+						<span class="operator">=></span> {
+						<span class="keyword">let</span> index =
+						<span class="number">0</span>;
+
+						<span class="keyword">const</span>
+						<span class="function">next</span> = ()
+						<span class="operator">=></span> {
+						<span class="keyword">if</span> (index
+						<span class="operator">>=</span> middlewares.length)
+						<span class="keyword">return</span>;
+						<span class="keyword">const</span> middleware =
+						middlewares[index<span class="operator">++</span>];
+						<span class="function">middleware</span>(ctx, next); };
+
+						<span class="function">next</span>();
+						<span class="keyword">return</span> ctx; }; };
+
+						<span class="comment">// Middleware functions</span>
+						<span class="keyword">const</span>
+						<span class="function">logger</span> = (ctx, next)
+						<span class="operator">=></span> { console.<span class="function"
+							>log</span
+						>(<span class="string">`Request: </span>${ctx.url}<span
+							class="string"
+							>`</span
+						>); <span class="function">next</span>(); };
+
+						<span class="keyword">const</span>
+						<span class="function">auth</span> = (ctx, next)
+						<span class="operator">=></span> {
+						<span class="keyword">if</span> (!ctx.token)
+						<span class="keyword">throw</span> <span class="keyword">new</span>
+						<span class="function">Error</span>(<span class="string"
+							>'Unauthorized'</span
+						>); ctx.user = { id: <span class="number">1</span>, name:
+						<span class="string">'John'</span> };
+						<span class="function">next</span>(); };
+
+						<span class="keyword">const</span> app =
+						<span class="function">createMiddlewarePipeline</span>(logger,
+						auth);
+					</div>
+				</div>
+
+				<div class="demo-section">
+					<div class="demo-title">🛡️ Request Middleware Chain</div>
+					<div class="interactive-demo">
+						<div class="input-group">
+							<input
+								type="text"
+								id="requestUrl"
+								placeholder="/api/users"
+								value="/api/secret" />
+							<input
+								type="text"
+								id="authToken"
+								placeholder="Auth token (optional)"
+								value="" />
+							<button onclick="runMiddleware()">Process Request</button>
+						</div>
+						<div
+							id="middlewareOutput"
+							class="output">
+							Configure request and run middleware chain...
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Summary -->
+			<div class="summary-box">
+				<h3>🎯 Why Higher-Order Functions Matter</h3>
+				<p
+					style="
+						color: #c7d2fe;
+						max-width: 600px;
+						margin: 0 auto;
+						line-height: 1.6;
+					">
+					They enable declarative, composable, and reusable code. Instead of
+					writing loops and conditions everywhere, you describe
+					<em>what</em> you want to do, not <em>how</em> to do it.
+				</p>
+				<ul class="checklist">
+					<li>Abstract common patterns (iteration, timing, validation)</li>
+					<li>Create configurable, reusable utilities</li>
+					<li>Enable functional composition and pipelines</li>
+					<li>Maintain private state with closures</li>
+					<li>Improve code readability and testability</li>
+				</ul>
+			</div>
+
+			<div class="grid">
+				<div class="mini-card">
+					<div class="tag">React</div>
+					<h3 style="margin-bottom: 0.5rem; color: #fff">Custom Hooks</h3>
+					<p style="color: #94a3b8; font-size: 0.9rem">
+						useFetch, useLocalStorage, useDebounce - all higher-order functions
+						managing state and side effects.
+					</p>
+				</div>
+				<div class="mini-card">
+					<div class="tag">Node.js</div>
+					<h3 style="margin-bottom: 0.5rem; color: #fff">Express Middleware</h3>
+					<p style="color: #94a3b8; font-size: 0.9rem">
+						app.use() accepts functions that process requests, forming a
+						pipeline for authentication, logging, and error handling.
+					</p>
+				</div>
+				<div class="mini-card">
+					<div class="tag">Testing</div>
+					<h3 style="margin-bottom: 0.5rem; color: #fff">Mock Functions</h3>
+					<p style="color: #94a3b8; font-size: 0.9rem">
+						jest.fn() and sinon.spy() are higher-order functions that wrap
+						original functions to track calls and arguments.
+					</p>
+				</div>
+				<div class="mini-card">
+					<div class="tag">Redux</div>
+					<h3 style="margin-bottom: 0.5rem; color: #fff">Store Enhancers</h3>
+					<p style="color: #94a3b8; font-size: 0.9rem">
+						applyMiddleware() takes middleware functions and enhances the
+						store's dispatch method.
+					</p>
+				</div>
+			</div>
 		</div>
-		<h3>
-			My Name Is Rihad Jahan Opu I am A web develaper and Very good at it
-		</h3>
+
+		<script>
+			// Progress bar
+			window.addEventListener("scroll", () => {
+				const winScroll =
+					document.body.scrollTop || document.documentElement.scrollTop;
+				const height =
+					document.documentElement.scrollHeight -
+					document.documentElement.clientHeight;
+				const scrolled = (winScroll / height) * 100;
+				document.getElementById("progressBar").style.width = scrolled + "%";
+			});
+
+			// Example 1: Shopping Cart
+			let cart = [];
+			const products = {
+				laptop: { name: "Laptop", price: 999 },
+				phone: { name: "Phone", price: 699 },
+				book: { name: "Book", price: 15 },
+				headphones: { name: "Headphones", price: 199 },
+			};
+
+			function addToCart() {
+				const select = document.getElementById("itemSelect");
+				const product = products[select.value];
+				cart.push({ ...product, id: Date.now() });
+				updateCartDisplay();
+			}
+
+			function clearCart() {
+				cart = [];
+				updateCartDisplay();
+			}
+
+			function updateCartDisplay() {
+				const output = document.getElementById("cartOutput");
+				if (cart.length === 0) {
+					output.textContent =
+						"Cart is empty. Add items to see higher-order functions in action...";
+					return;
+				}
+
+				// Using higher-order functions
+				const withTax = cart.map((item) => ({
+					...item,
+					priceWithTax: (item.price * 1.1).toFixed(2),
+				}));
+
+				const expensiveItems = cart.filter((item) => item.price > 100);
+				const total = cart.reduce((sum, item) => sum + item.price, 0);
+				const avgPrice = total / cart.length;
+
+				output.innerHTML = `🛒 Cart Items (${cart.length}):
+${withTax.map((item) => `• ${item.name}: $${item.price} → $${item.priceWithTax} (with tax)`).join("\n")}
+
+📊 Analysis:
+• Expensive items (>$100): ${expensiveItems.length} (${expensiveItems.map((i) => i.name).join(", ")})
+• Total: $${total}
+• Average: $${avgPrice.toFixed(2)}`;
+			}
+
+			// Example 2: Pipeline
+			const pipe =
+				(...fns) =>
+				(x) =>
+					fns.reduce((v, f) => f(v), x);
+			const trim = (str) => str.trim();
+			const toLower = (str) => str.toLowerCase();
+			const removeSpecialChars = (str) => str.replace(/[^a-z0-9]/g, "");
+			const addPrefix = (prefix) => (str) => `${prefix}_${str}`;
+			const limitLength = (str) => str.slice(0, 20);
+
+			function sanitize() {
+				const input = document.getElementById("usernameInput").value;
+				const output = document.getElementById("pipelineOutput");
+
+				if (!input) {
+					output.textContent = "Please enter a username";
+					output.classList.add("error");
+					return;
+				}
+
+				output.classList.remove("error");
+
+				const steps = [
+					{ name: "Original", fn: (x) => x, result: input },
+					{ name: "trim()", fn: trim, result: trim(input) },
+					{ name: "toLowerCase()", fn: toLower, result: toLower(trim(input)) },
+					{
+						name: 'replace(/[^a-z0-9]/g, "")',
+						fn: removeSpecialChars,
+						result: removeSpecialChars(toLower(trim(input))),
+					},
+					{
+						name: 'addPrefix("user")',
+						fn: addPrefix("user"),
+						result: addPrefix("user")(removeSpecialChars(toLower(trim(input)))),
+					},
+					{
+						name: "slice(0, 20)",
+						fn: limitLength,
+						result: limitLength(
+							addPrefix("user")(removeSpecialChars(toLower(trim(input))))
+						),
+					},
+				];
+
+				const sanitizeUsername = pipe(
+					trim,
+					toLower,
+					removeSpecialChars,
+					addPrefix("user"),
+					limitLength
+				);
+				const final = sanitizeUsername(input);
+
+				output.innerHTML = `🔧 Pipeline Transformation:
+${steps.map((step, i) => `${i + 1}. ${step.name.padEnd(25)} → "${step.result}"`).join("\n")}
+
+✅ Final Result: "${final}"`;
+			}
+
+			// Example 3: Factory
+			let currentCalculator = null;
+
+			function createDiscountCalculator() {
+				const rate = parseFloat(document.getElementById("discountRate").value);
+				const output = document.getElementById("factoryOutput");
+
+				if (!rate || rate <= 0 || rate > 100) {
+					output.textContent = "❌ Please enter a valid discount rate (1-100)";
+					output.classList.add("error");
+					return;
+				}
+
+				output.classList.remove("error");
+
+				// Factory function with closure
+				currentCalculator = (function (discountPercent) {
+					let usageCount = 0;
+					const rate = discountPercent / 100;
+
+					return {
+						calculate: function (price) {
+							usageCount++;
+							const discount = price * rate;
+							return {
+								original: price,
+								discount: discount.toFixed(2),
+								final: (price - discount).toFixed(2),
+								count: usageCount,
+							};
+						},
+						getRate: () => discountPercent,
+						getUsageCount: () => usageCount,
+					};
+				})(rate);
+
+				document.getElementById("calcControls").style.display = "flex";
+				output.innerHTML = `✅ Calculator created with ${rate}% discount rate!
+🔒 Private state: usageCount = 0 (closed over)
+📊 Rate is fixed at: ${rate * 100}%
+
+Enter a price to calculate discount...`;
+			}
+
+			function calculateDiscount() {
+				const price = parseFloat(
+					document.getElementById("originalPrice").value
+				);
+				const output = document.getElementById("factoryOutput");
+
+				if (!price || price <= 0) {
+					output.textContent = "❌ Please enter a valid price";
+					output.classList.add("error");
+					return;
+				}
+
+				const result = currentCalculator.calculate(price);
+				output.innerHTML = `💰 Calculation #${result.count}:
+• Original Price: $${result.original}
+• Discount (${currentCalculator.getRate()}%): $${result.discount}
+• Final Price: $${result.final}
+
+🔒 Closure maintains usage count: ${result.count} calls made`;
+			}
+
+			// Example 4: Debounce
+			let normalCount = 0;
+			let debounceCount = 0;
+			let debounceTimer;
+
+			const debounce = (fn, delay) => {
+				let timeoutId;
+				return (...args) => {
+					clearTimeout(timeoutId);
+					timeoutId = setTimeout(() => fn(...args), delay);
+				};
+			};
+
+			const debouncedSearch = debounce((query) => {
+				debounceCount++;
+				document.getElementById("debounceOutput").textContent =
+					`${debounceCount} calls (last: "${query}")`;
+			}, 300);
+
+			document.getElementById("searchInput").addEventListener("input", (e) => {
+				const query = e.target.value;
+
+				// Normal (every keystroke)
+				normalCount++;
+				document.getElementById("normalOutput").textContent =
+					`${normalCount} calls (last: "${query}")`;
+
+				// Debounced
+				debouncedSearch(query);
+			});
+
+			// Example 5: Middleware
+			function createMiddlewarePipeline(...middlewares) {
+				return (ctx) => {
+					let index = 0;
+					const next = () => {
+						if (index >= middlewares.length) return;
+						const middleware = middlewares[index++];
+						middleware(ctx, next);
+					};
+					next();
+					return ctx;
+				};
+			}
+
+			function runMiddleware() {
+				const url = document.getElementById("requestUrl").value;
+				const token = document.getElementById("authToken").value;
+				const output = document.getElementById("middlewareOutput");
+
+				const ctx = { url, token, logs: [], user: null };
+
+				const logger = (ctx, next) => {
+					ctx.logs.push(
+						`[${new Date().toLocaleTimeString()}] 📝 Logging: ${ctx.url}`
+					);
+					next();
+				};
+
+				const auth = (ctx, next) => {
+					if (!ctx.token) {
+						ctx.logs.push("❌ Auth: No token provided!");
+						ctx.error = "Unauthorized";
+						return; // Stop chain
+					}
+					ctx.logs.push("✅ Auth: Token validated");
+					ctx.user = { id: 1, name: "Admin" };
+					next();
+				};
+
+				const dataValidator = (ctx, next) => {
+					if (ctx.error) return;
+					ctx.logs.push("🔍 Validator: Checking request data...");
+					ctx.data = { valid: true };
+					next();
+				};
+
+				const handler = (ctx, next) => {
+					if (ctx.error) return;
+					ctx.logs.push("🎯 Handler: Processing request");
+					ctx.response = { status: 200, data: "Success" };
+				};
+
+				const pipeline = createMiddlewarePipeline(
+					logger,
+					auth,
+					dataValidator,
+					handler
+				);
+				pipeline(ctx);
+
+				output.innerHTML = `🔄 Middleware Chain Execution:
+${ctx.logs.join("\n")}
+
+${ctx.error ? `❌ Failed: ${ctx.error}` : `✅ Success: ${JSON.stringify(ctx.response)}`}
+👤 User: ${ctx.user ? JSON.stringify(ctx.user) : "Not authenticated"}`;
+			}
+		</script>
 	</body>
 </html>
