@@ -1,0 +1,364 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap");
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	font-family: "Inter", sans-serif;
+	background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+	min-height: 100vh;
+	color: #e0e7ff;
+	overflow-x: hidden;
+}
+
+.container {
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem;
+}
+
+header {
+	text-align: center;
+	padding: 3rem 0;
+	position: relative;
+}
+
+h1 {
+	font-size: 3.5rem;
+	font-weight: 800;
+	background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+	margin-bottom: 1rem;
+	animation: glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+	from {
+		filter: drop-shadow(0 0 20px rgba(96, 165, 250, 0.3));
+	}
+	to {
+		filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.5));
+	}
+}
+
+.subtitle {
+	font-size: 1.25rem;
+	color: #a5b4fc;
+	max-width: 600px;
+	margin: 0 auto;
+	line-height: 1.6;
+}
+
+.concept-card {
+	background: rgba(255, 255, 255, 0.05);
+	backdrop-filter: blur(10px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 20px;
+	padding: 2.5rem;
+	margin: 2rem 0;
+	position: relative;
+	overflow: hidden;
+	transition:
+		transform 0.3s ease,
+		box-shadow 0.3s ease;
+}
+
+.concept-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.concept-card::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 4px;
+	background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6);
+}
+
+.card-header {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-bottom: 1.5rem;
+}
+
+.icon {
+	width: 50px;
+	height: 50px;
+	background: linear-gradient(135deg, #4f46e5, #7c3aed);
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.5rem;
+}
+
+h2 {
+	font-size: 1.75rem;
+	color: #fff;
+}
+
+.description {
+	color: #c7d2fe;
+	line-height: 1.7;
+	margin-bottom: 1.5rem;
+	font-size: 1.05rem;
+}
+
+.code-block {
+	background: #0f172a;
+	border-radius: 12px;
+	padding: 1.5rem;
+	font-family: "Fira Code", monospace;
+	font-size: 0.9rem;
+	overflow-x: auto;
+	border: 1px solid #334155;
+	position: relative;
+}
+
+.code-header {
+	display: flex;
+	gap: 0.5rem;
+	margin-bottom: 1rem;
+	padding-bottom: 0.5rem;
+	border-bottom: 1px solid #334155;
+}
+
+.dot {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+}
+
+.dot-red {
+	background: #ef4444;
+}
+.dot-yellow {
+	background: #f59e0b;
+}
+.dot-green {
+	background: #10b981;
+}
+
+.code-content {
+	color: #e2e8f0;
+	line-height: 1.8;
+}
+
+.keyword {
+	color: #c084fc;
+}
+.function {
+	color: #60a5fa;
+}
+.string {
+	color: #86efac;
+}
+.comment {
+	color: #64748b;
+	font-style: italic;
+}
+.number {
+	color: #f472b6;
+}
+.operator {
+	color: #fbbf24;
+}
+
+.demo-section {
+	margin-top: 2rem;
+	padding-top: 2rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.demo-title {
+	font-size: 1.25rem;
+	color: #fbbf24;
+	margin-bottom: 1rem;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.interactive-demo {
+	background: rgba(15, 23, 42, 0.6);
+	border-radius: 12px;
+	padding: 1.5rem;
+	margin-top: 1rem;
+}
+
+.input-group {
+	display: flex;
+	gap: 1rem;
+	margin-bottom: 1rem;
+	flex-wrap: wrap;
+}
+
+input,
+select,
+button {
+	padding: 0.75rem 1rem;
+	border-radius: 8px;
+	border: 1px solid #475569;
+	background: #1e293b;
+	color: #fff;
+	font-family: inherit;
+	font-size: 0.95rem;
+	transition: all 0.3s ease;
+}
+
+input:focus,
+select:focus {
+	outline: none;
+	border-color: #60a5fa;
+	box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+}
+
+button {
+	background: linear-gradient(135deg, #4f46e5, #7c3aed);
+	border: none;
+	cursor: pointer;
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+button:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+}
+
+.output {
+	background: #0f172a;
+	border-radius: 8px;
+	padding: 1rem;
+	font-family: "Fira Code", monospace;
+	min-height: 100px;
+	border-left: 4px solid #10b981;
+	margin-top: 1rem;
+	white-space: pre-wrap;
+	color: #86efac;
+}
+
+.output.error {
+	border-left-color: #ef4444;
+	color: #fca5a5;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 2rem;
+	margin-top: 3rem;
+}
+
+.mini-card {
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.05);
+	border-radius: 16px;
+	padding: 1.5rem;
+	transition: all 0.3s ease;
+}
+
+.mini-card:hover {
+	background: rgba(255, 255, 255, 0.08);
+	transform: scale(1.02);
+}
+
+.tag {
+	display: inline-block;
+	padding: 0.25rem 0.75rem;
+	background: rgba(96, 165, 250, 0.2);
+	color: #60a5fa;
+	border-radius: 20px;
+	font-size: 0.75rem;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.progress-bar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 4px;
+	background: linear-gradient(90deg, #60a5fa, #a78bfa);
+	z-index: 1000;
+	transition: width 0.3s ease;
+}
+
+.floating-shapes {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: -1;
+	overflow: hidden;
+}
+
+.shape {
+	position: absolute;
+	opacity: 0.1;
+	animation: float 20s infinite ease-in-out;
+}
+
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0) rotate(0deg);
+	}
+	50% {
+		transform: translateY(-100px) rotate(180deg);
+	}
+}
+
+.summary-box {
+	background: linear-gradient(
+		135deg,
+		rgba(79, 70, 229, 0.2),
+		rgba(124, 58, 237, 0.2)
+	);
+	border: 1px solid rgba(139, 92, 246, 0.3);
+	border-radius: 16px;
+	padding: 2rem;
+	margin-top: 3rem;
+	text-align: center;
+}
+
+.summary-box h3 {
+	color: #fbbf24;
+	margin-bottom: 1rem;
+	font-size: 1.5rem;
+}
+
+.checklist {
+	text-align: left;
+	display: inline-block;
+	margin-top: 1rem;
+}
+
+.checklist li {
+	margin: 0.5rem 0;
+	list-style: none;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.checklist li::before {
+	content: "✓";
+	color: #10b981;
+	font-weight: bold;
+}
